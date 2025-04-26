@@ -1,1 +1,1 @@
-# FlexPara
+# FlexPara: Flexible Neural Surface Parameterization
