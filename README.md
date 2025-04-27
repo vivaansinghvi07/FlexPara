@@ -27,6 +27,11 @@ This repository contains the official implementation for the paper **FlexPara: F
 
 <p align="center"> <img src="assets/teaser3.png" width="100%"> </p>
 
+We have previously conducted a series of works on **regular 3D geometry representations**. Please refer to the following:
+- **[FlattenAnything](https://github.com/keeganhk/FlattenAnything)** for global free-boundary surface parameterization.
+- **[RegGeoNet](https://github.com/keeganhk/RegGeoNet)** for large-scale 3D point clouds.
+- **[Flattening-Net](https://github.com/keeganhk/Flattening-Net)** for feed-forward point cloud structurization.
+- **[SPCV](https://github.com/ZENGYIMING-EAMON/SPCV)** for dynamic 3D point cloud sequences.
 
 ## Code
 Coming soon!
