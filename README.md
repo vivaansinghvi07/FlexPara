@@ -26,8 +26,8 @@
 This repository contains the official implementation for the paper **FlexPara: Flexible Neural Surface Parameterization**. 
 
 <p align="center"> <img src="assets/teaser3.png" width="100%"> </p>
-<p align="center"> <img src="assets/global-pipeline.png" width="100%"> </p>
-<p align="center"> <img src="assets/multi-pipeline.png" width="100%"> </p>
+<p align="center"> <img src="assets/global-pipeline.png" width="75%"> </p>
+<p align="center"> <img src="assets/multi-pipeline.png" width="75%"> </p>
 
 We have previously conducted a series of works on **regular 3D geometry representations**. Please refer to the following:
 - **[FlattenAnything](https://github.com/keeganhk/FlattenAnything)** for global free-boundary surface parameterization.
