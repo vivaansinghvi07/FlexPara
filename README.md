@@ -24,7 +24,7 @@
 <br />
 
 This repository contains the official implementation for the paper [FlexPara: Flexible Neural Surface Parameterization]. 
-![teaser.png](assets/teaser.png)
+![teaser.png](assets/teaser3.png)
 
 
 
