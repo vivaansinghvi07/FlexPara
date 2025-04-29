@@ -1,7 +1,7 @@
 <br />
 <p align="center">
     <h1 align="center">
-        <a href="#">FlexPara</a>: Flexible Neural Surface Parameterization
+        <a href="https://arxiv.org/abs/2504.19210">FlexPara</a>: Flexible Neural Surface Parameterization
     </h1>
 
   <p align="center">
@@ -26,7 +26,7 @@
 </p>
 <br />
 
-This repository contains the official implementation for the paper **FlexPara: Flexible Neural Surface Parameterization**. 
+This repository contains the official implementation for the paper [FlexPara: Flexible Neural Surface Parameterization](https://arxiv.org/abs/2504.19210). 
 
 <p align="center"> <img src="assets/teaser3.png" width="100%"> </p>
 <p align="center"> <img src="assets/global-pipeline.png" width="75%"> </p>
