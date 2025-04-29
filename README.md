@@ -18,7 +18,10 @@
     ·
     <a href="https://personal.ntu.edu.sg/yhe/"><strong>Ying He</strong></a>
   </p>
-
+  
+<p align="center">
+    <a href='https://arxiv.org/abs/2504.19210'><img src='https://img.shields.io/badge/arxiv-2504.19210-red'  alt='Arxiv'></a>
+  </p>
 
 </p>
 <br />
