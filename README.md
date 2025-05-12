@@ -83,7 +83,6 @@ python test.py ../data/bunny.obj flexpara_multi_8.pth ../expt
 + [x] train code
 + [x] test code (simple version)
 + [ ] test code (full version)
-+ [ ] 
 
 ## Ciation
 If you find our work useful in your research, please consider citing:
