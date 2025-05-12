@@ -67,7 +67,7 @@ python train.py 1 ../data/bunny.obj ../expt 1600 10000
 python train.py 8 ../data/bunny.obj ../expt 1600 10000
 ```
 
-**Testing**
+**Testing:**
 ```bash
 mkdir expt
 cd scripts
