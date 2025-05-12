@@ -38,10 +38,26 @@ We have previously conducted a series of works on **regular 3D geometry represen
 - **[Flattening-Net](https://github.com/keeganhk/Flattening-Net)** for feed-forward point cloud structurization.
 - **[SPCV](https://github.com/ZENGYIMING-EAMON/SPCV)** for dynamic 3D point cloud sequences.
 
+## Configuration
+```bash
+conda create --name FlexPara python=3.9
+conda activate FlexPara
+pip install torch==1.10.1+cu111 torchvision==0.11.2+cu111 torchaudio==0.10.1 -f https://download.pytorch.org/whl/cu111/torch_stable.html
+pip install -r requirements.txt
+
+cd cdbs/CD
+python setup.py install
+
+cd ..
+cd EMD
+python setup.py install
+cp build/lib.linux-x86_64-cpython-39/emd_cuda.cpython-39-x86_64-linux-gnu.so .
+```
+
 ## Code
 TODO List
 + [ ] data pre-processing
-+ [ ] environment configuration
++ [x] environment configuration
 + [x] train code
 + [x] test code (simple version)
 + [ ] test code (full version) 
