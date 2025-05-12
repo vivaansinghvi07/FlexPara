@@ -1,0 +1,9 @@
+ninja
+tqdm
+h5py
+Cython
+open3d
+opencv-python
+point-cloud-utils
+jupyterlab
+notebook
