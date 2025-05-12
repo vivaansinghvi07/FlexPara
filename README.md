@@ -39,4 +39,9 @@ We have previously conducted a series of works on **regular 3D geometry represen
 - **[SPCV](https://github.com/ZENGYIMING-EAMON/SPCV)** for dynamic 3D point cloud sequences.
 
 ## Code
-Coming soon!
+TODO List
++ [ ] data pre-processing
++ [ ] environment configuration
++ [x] train code
++ [x] test code (simple version)
++ [ ] test code (full version) 
