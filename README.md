@@ -54,8 +54,26 @@ python setup.py install
 cp build/lib.linux-x86_64-cpython-39/emd_cuda.cpython-39-x86_64-linux-gnu.so .
 ```
 
-## Code
-TODO List
+## Instruction
+**Training:**
+```bash
+cd scripts
+# Global Parameterization
+python train.py 1 ../data/bunny.obj ../expt 1600 10000
+# MulitChart Parameterization
+python train.py 8 ../data/bunny.obj ../expt 1600 10000
+```
+
+**Testing**
+```bash
+cd scripts
+# Global Parameterization
+python test.py ../data/bunny.obj flexpara_global.pth ../expt
+# MulitChart Parameterization
+python test.py ../data/bunny.obj flexpara_multi_8.pth ../expt
+```
+
+## TODO List
 + [ ] data pre-processing
 + [x] environment configuration
 + [x] train code
