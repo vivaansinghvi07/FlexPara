@@ -55,6 +55,7 @@ cp build/lib.linux-x86_64-cpython-39/emd_cuda.cpython-39-x86_64-linux-gnu.so .
 ```
 
 ## Instruction
+The project is a v0.1 version for fast review now, and we will release the v1.0 version later, including data pre-processing, full evaluation and so on.
 **Training:**
 ```bash
 cd scripts
