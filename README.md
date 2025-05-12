@@ -82,4 +82,16 @@ python test.py ../data/bunny.obj flexpara_multi_8.pth ../expt
 + [x] environment configuration
 + [x] train code
 + [x] test code (simple version)
-+ [ ] test code (full version) 
++ [ ] test code (full version)
++ [ ] 
+
+## Ciation
+If you find our work useful in your research, please consider citing:
+    
+    @article{zhao2025flexpara,
+      title={FlexPara: Flexible Neural Surface Parameterization},
+      author={Zhao, Yuming and Zhang, Qijian and Hou, Junhui and Xia, Jiazhi and Wang, Wenping and He, Ying},
+      journal={arXiv preprint arXiv:2504.19210},
+      year={2025}
+    }
+
