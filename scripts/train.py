@@ -16,6 +16,10 @@ def main():
     os.makedirs(export_folder, exist_ok=True)
     
     vertices, normals, faces = load_mesh_model_vfn(args.load_mesh_path)
+    if np.isnan(normals).any():
+        import trimesh
+        a = trimesh.load_mesh(args.load_mesh_path)
+        vertices, normals, faces = a.vertices, a.vertex_normals, a.faces
     num_verts = vertices.shape[0]
     num_faces = faces.shape[0]
     print(f"{num_verts=}, {num_faces=}")
