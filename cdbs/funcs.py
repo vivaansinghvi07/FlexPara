@@ -321,7 +321,7 @@ def compute_repulsion_loss_charts(points, K, minimum_distance,charts_prob):
     return loss
 
 def L1_loss_charts(x,y,chart_prob):
-    loss = (((x-y)*(x-y)).squeeze(0).sum(dim=1).sqrt()*chart_prob).mean()
+    loss = ((((x-y)*(x-y)).squeeze(0).sum(dim=1) + 1e-8).sqrt()*chart_prob).mean()
     return loss
 
 def compute_normal_cos_sim_loss(x1, x2):
@@ -343,7 +343,7 @@ def extract_edge_points(points_3d, points_2d, K, T):
     points_2d = uv_bounding_box_normalization(points_2d)
     knn_idx = knn_search(points_3d, points_3d, K+1)[:, :, 1:] # [B, N, K]
     points_2d_mapped = index_points(points_2d, knn_idx) # [B, N, K, 2]
-    dists = ((points_2d.unsqueeze(2) - points_2d_mapped)**2).sum(dim=-1).sqrt() # [B, N, K]
+    dists = (((points_2d.unsqueeze(2) - points_2d_mapped)**2).sum(dim=-1) + 1e-8).sqrt() # [B, N, K]
     dists_max = dists.max(dim=-1)[0] # [B, N]
     edge_mask = (dists_max.squeeze(0) > T)
     return edge_mask
@@ -425,14 +425,14 @@ def isometric_loss_by_prob_l1_percent(uv_points,points_3d,triangles,charts_prob)
     bc_prob = (b_prob+c_prob)/2
     ac_prob = (a_prob+c_prob)/2
 
-    dis_ab_uv = ((a_uv - b_uv)*(a_uv - b_uv)).sum(dim=1).sqrt()
-    dis_bc_uv = ((b_uv - c_uv)*(b_uv - c_uv)).sum(dim=1).sqrt()
-    dis_ac_uv = ((a_uv - c_uv)*(a_uv - c_uv)).sum(dim=1).sqrt()
+    dis_ab_uv = (((a_uv - b_uv)*(a_uv - b_uv)).sum(dim=1) + 1e-8).sqrt()
+    dis_bc_uv = (((b_uv - c_uv)*(b_uv - c_uv)).sum(dim=1) + 1e-8).sqrt()
+    dis_ac_uv = (((a_uv - c_uv)*(a_uv - c_uv)).sum(dim=1) + 1e-8).sqrt()
 
 
-    dis_ab_3d = ((a_3d - b_3d)*(a_3d - b_3d)).sum(dim=1).sqrt()
-    dis_bc_3d = ((b_3d - c_3d)*(b_3d - c_3d)).sum(dim=1).sqrt()
-    dis_ac_3d = ((a_3d - c_3d)*(a_3d - c_3d)).sum(dim=1).sqrt()
+    dis_ab_3d = (((a_3d - b_3d)*(a_3d - b_3d)).sum(dim=1) + 1e-8).sqrt()
+    dis_bc_3d = (((b_3d - c_3d)*(b_3d - c_3d)).sum(dim=1) + 1e-8).sqrt()
+    dis_ac_3d = (((a_3d - c_3d)*(a_3d - c_3d)).sum(dim=1) + 1e-8).sqrt()
 
     loss_ab = (((dis_ab_uv-dis_ab_3d).abs())*ab_prob).sum()
     loss_bc = (((dis_bc_uv-dis_bc_3d).abs())*bc_prob).sum()

@@ -1,6 +1,23 @@
 from cdbs.funcs import *
 from cdbs.network import FlexParaGlobal,FlexParaMultiChart
 
+import tqdm
+import torch 
+torch.autograd.set_detect_anomaly(True)
+
+import point_cloud_utils as pcu
+
+# arrange uvs nice and neatly in a line
+def clean_uvs(uvs: np.ndarray, class_assignments: np.ndarray, n_classes: int) -> int:
+    for i in range(n_classes):
+        xs, ys = uvs[class_assignments == i, :].T
+        r = max(xs.max() - xs.min(), ys.max() - ys.min())
+        uvs[class_assignments == i, 0] = (xs - xs.min()) / r
+        uvs[class_assignments == i, 1] = (ys - ys.min()) / r  # now scaled 0 - 1 (approx)
+        uvs[class_assignments == i, 0] += i  # shift x by one
+    uvs[:, 0] /= n_classes
+    return uvs 
+
 def train_flexpara(vertices, normals, faces, charts_number, num_iter, export_folder,N):
     if charts_number==1:
         net = FlexParaGlobal().train().cuda()
@@ -165,7 +182,7 @@ def test_flexpara(vertices, normals, faces, load_ckpt_path, export_folder, chart
         plt.savefig(os.path.join(export_folder, "Q_eval_normalized.png"), dpi=400, bbox_inches="tight")
 
     else:
-        net =  FlexParaMultiChart(charts_number).train().cuda()
+        net = FlexParaMultiChart(charts_number).train().cuda()
         weight = torch.load(os.path.join(export_folder, load_ckpt_path))
         net.load_state_dict(weight)
 
@@ -177,7 +194,43 @@ def test_flexpara(vertices, normals, faces, load_ckpt_path, export_folder, chart
             results_eval,charts_prob_eval = net(P)
 
         class_labels = torch.argmax(charts_prob_eval, dim=2).squeeze(0)
+        other = torch.max(charts_prob_eval, dim=2)
+
+        N = class_labels.shape[0]
+        n = N
+        added_verts = np.empty_like(vertices)
+        added_norms = np.empty_like(normals)
+        added_uvs = np.empty((vertices.shape[0], 2), dtype=np.float32)
+        added_class_assignments = np.empty(class_labels.shape, dtype=np.int64)
+        added_verts_lookup = {}
+        def add_vert(vert, cls):
+            nonlocal n
+            added_verts_lookup[vert, cls] = n
+            added_verts[n - N] = vertices[vert]
+            added_uvs[n - N] = results_eval[cls][1][0][vert].cpu().numpy()
+            added_norms[n - N] = normals[vert]
+            added_class_assignments[n - N] = cls
+            n += 1
+
+        class_labels_cpu = class_labels.cpu()
+        for i in range(faces.shape[0]):
+            f = faces[i]
+            unique = class_labels_cpu[f].unique()
+            if unique.shape[0] == 1: continue
+            c = unique.max()  # arb (but consistent) choice
+            v = f[(class_labels_cpu[f] != c).nonzero()]  # vertices without that label
+            for a in v.reshape(-1):
+                if (a, c) not in added_verts_lookup:  # save index of added duplicate vertex
+                    add_vert(a, c)
+                a_vert = added_verts_lookup[a, c]  # new vertex with target cls
+                f[f == a] = a_vert 
+            faces[i] = f
+
+        uv_coords = np.zeros((N, 2), dtype=np.float32)
         for i in range(charts_number):
+            temp = results_eval[i][1]
+            temp[:, class_labels != i, :] = 0
+            uv_coords += temp.reshape(N, 2).detach().cpu().numpy()
             Q_eval_chart = results_eval[i][1][:,class_labels == i,:]
             if Q_eval_chart.shape[1]==0:
                 continue
@@ -188,5 +241,15 @@ def test_flexpara(vertices, normals, faces, load_ckpt_path, export_folder, chart
             plt.scatter(ts2np(Q_eval_chart_normalization.squeeze(0))[:, 0], ts2np(Q_eval_chart_normalization.squeeze(0))[:, 1], s=5, c=((ts2np(P_gtn_eval_chart.squeeze(0)) + 1) / 2))
             plt.savefig(os.path.join(export_folder, "Q_eval_normalized_"+str(i)+".png"), dpi=400, bbox_inches="tight")
 
-
-
+        vertices = np.concat((vertices, added_verts[:n - N]))
+        uv_coords = np.concat((uv_coords, added_uvs[:n - N]))
+        normals = np.concat((normals, added_norms[:n - N]))
+        class_assignments = np.concat((class_labels_cpu.numpy(), added_class_assignments[:n - N]))
+        uv_coords = clean_uvs(uv_coords, class_assignments, charts_number)
+        mesh_name = export_folder.split('/')[-1]
+        pcu.save_triangle_mesh(f"model/{mesh_name}.obj", vertices, vn=normals, f=faces, vt=uv_coords)
+        with open(f"model/{mesh_name}.obj", 'r') as f:
+            data = f.read()
+        with open(f"model/{mesh_name}.obj", 'w') as f:
+            f.write("mtllib material.mtl\nusemtl material_0\n")
+            f.write(data)
