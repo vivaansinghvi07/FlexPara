@@ -240,10 +240,10 @@ def test_flexpara(vertices, normals, faces, load_ckpt_path, export_folder, chart
             plt.scatter(ts2np(Q_eval_chart_normalization.squeeze(0))[:, 0], ts2np(Q_eval_chart_normalization.squeeze(0))[:, 1], s=5, c=((ts2np(P_gtn_eval_chart.squeeze(0)) + 1) / 2))
             plt.savefig(os.path.join(export_folder, "Q_eval_normalized_"+str(i)+".png"), dpi=400, bbox_inches="tight")
 
-        vertices = np.concat((vertices, added_verts[:n - N]))
-        uv_coords = np.concat((uv_coords, added_uvs[:n - N]))
-        normals = np.concat((normals, added_norms[:n - N]))
-        class_assignments = np.concat((class_labels_cpu.numpy(), added_class_assignments[:n - N]))
+        vertices = np.concatenate((vertices, added_verts[:n - N]))
+        uv_coords = np.concatenate((uv_coords, added_uvs[:n - N]))
+        normals = np.concatenate((normals, added_norms[:n - N]))
+        class_assignments = np.concatenate((class_labels_cpu.numpy(), added_class_assignments[:n - N]))
         uv_coords = clean_uvs(uv_coords, class_assignments, charts_number)
         mesh_name = export_folder.split('/')[-1]
         pcu.save_triangle_mesh(f"model/{mesh_name}.obj", vertices, vn=normals, f=faces, vt=uv_coords)
