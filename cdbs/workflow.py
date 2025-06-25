@@ -6,18 +6,6 @@ torch.autograd.set_detect_anomaly(True)
 
 import point_cloud_utils as pcu
 
-# arrange uvs nice and neatly in a line
-def clean_uvs(uvs: np.ndarray, class_assignments: np.ndarray, n_classes: int) -> int:
-    for i in range(n_classes):
-        xs, ys = uvs[class_assignments == i, :].T
-        if 0 in xs.shape:
-            continue
-        r = max(xs.max() - xs.min(), ys.max() - ys.min())
-        uvs[class_assignments == i, 0] = (xs - xs.min()) / r
-        uvs[class_assignments == i, 1] = (ys - ys.min()) / r  # now scaled 0 - 1 (approx)
-        uvs[class_assignments == i, 0] += i  # shift x by one
-    uvs[:, 0] /= n_classes
-    return uvs 
 
 def train_flexpara(vertices, normals, faces, charts_number, num_iter, export_folder,N):
     if charts_number==1:
@@ -159,8 +147,20 @@ def train_flexpara(vertices, normals, faces, charts_number, num_iter, export_fol
         torch.save(net.state_dict(), os.path.join(export_folder, "flexpara_multi_" + str(charts_number) + ".pth"))
 
 
+def clean_uvs(uvs: np.ndarray, class_assignments: np.ndarray, n_classes: int) -> int:
+    for i in range(n_classes):
+        xs, ys = uvs[class_assignments == i, :].T
+        if 0 in xs.shape:
+            continue
+        r = max(xs.max() - xs.min(), ys.max() - ys.min())
+        uvs[class_assignments == i, 0] = (xs - xs.min()) / r
+        uvs[class_assignments == i, 1] = (ys - ys.min()) / r  # now scaled 0 - 1 (approx)
+        uvs[class_assignments == i, 0] += i  # shift x by one
+    uvs[:, 0] /= n_classes
+    return uvs 
 
-def test_flexpara(vertices, normals, faces, load_ckpt_path, export_folder, charts_number):
+
+def test_flexpara(vertices, normals, faces, load_ckpt_path, export_folder, charts_number, mesh_export_root):
     if load_ckpt_path == "flexpara_global.pth":
         net =  FlexParaGlobal().train().cuda()
         weight = torch.load(os.path.join(export_folder, load_ckpt_path))
@@ -248,9 +248,9 @@ def test_flexpara(vertices, normals, faces, load_ckpt_path, export_folder, chart
         class_assignments = np.concatenate((class_labels_cpu.numpy(), added_class_assignments[:n - N]))
         uv_coords = clean_uvs(uv_coords, class_assignments, charts_number)
         mesh_name = export_folder.split('/')[-1]
-        pcu.save_triangle_mesh(f"model/{mesh_name}.obj", vertices, vn=normals, f=faces, vt=uv_coords)
-        with open(f"model/{mesh_name}.obj", 'r') as f:
+        pcu.save_triangle_mesh(f"{mesh_export_root}/{mesh_name}.obj", vertices, vn=normals, f=faces, vt=uv_coords)
+        with open(f"{mesh_export_root}/{mesh_name}.obj", 'r') as f:
             data = f.read()
-        with open(f"model/{mesh_name}.obj", 'w') as f:
+        with open(f"{mesh_export_root}/{mesh_name}.obj", 'w') as f:
             f.write("mtllib material.mtl\nusemtl material_0\n")
             f.write(data)

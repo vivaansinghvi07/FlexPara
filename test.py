@@ -7,8 +7,11 @@ def main():
     parser.add_argument("load_mesh_path", type=str)
     parser.add_argument("load_ckpt_path", type=str)
     parser.add_argument("export_root", type=str)
+    parser.add_argument("mesh_export_root", type=str)
     args = parser.parse_args()
     
+    os.makedirs(args.mesh_export_root, exist_ok=True)
+
     mesh_name = args.load_mesh_path.split("/")[-1].split(".")[0]
     if args.load_ckpt_path == "flexpara_global.pth":
         export_folder = os.path.join(args.export_root, mesh_name+"_1")
@@ -23,7 +26,7 @@ def main():
     print(f"{num_verts=}, {num_faces=}")
     
     print(f"start testing on [{mesh_name}] ...")
-    test_flexpara(vertices, normals, faces, args.load_ckpt_path, export_folder, charts_number)
+    test_flexpara(vertices, normals, faces, args.load_ckpt_path, export_folder, charts_number, args.mesh_export_root)
 
 if __name__ == '__main__':
     main()
