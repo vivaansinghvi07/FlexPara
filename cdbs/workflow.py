@@ -10,6 +10,8 @@ import point_cloud_utils as pcu
 def clean_uvs(uvs: np.ndarray, class_assignments: np.ndarray, n_classes: int) -> int:
     for i in range(n_classes):
         xs, ys = uvs[class_assignments == i, :].T
+        if 0 in xs.shape:
+            continue
         r = max(xs.max() - xs.min(), ys.max() - ys.min())
         uvs[class_assignments == i, 0] = (xs - xs.min()) / r
         uvs[class_assignments == i, 1] = (ys - ys.min()) / r  # now scaled 0 - 1 (approx)
