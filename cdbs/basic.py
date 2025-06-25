@@ -1,8 +1,7 @@
 import torch
-from .KNN_CPU import nearest_neighbors as knn_cpu
+import nearest_neighbors as knn_cpu
 from .EMD.emd import earth_mover_distance_unwrapped
-from .CD.chamferdist.chamfer import knn_points as knn_gpu
-
+from chamferdist.chamfer import knn_points as knn_gpu
 
 
 def knn_on_gpu(source_pts, query_pts, k):

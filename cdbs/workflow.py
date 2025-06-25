@@ -1,7 +1,6 @@
 from cdbs.funcs import *
 from cdbs.network import FlexParaGlobal,FlexParaMultiChart
 
-import tqdm
 import torch 
 torch.autograd.set_detect_anomaly(True)
 
